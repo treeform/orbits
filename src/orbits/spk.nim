@@ -6,7 +6,8 @@
 ##
 
 
-import vmath, streams, print
+import streams, print, httpclient, strutils, os
+import vmath
 import simple
 
 type
@@ -214,3 +215,14 @@ proc posAt*(spk: Spk, time: float64, target, observer: int): Vec3 =
   let sv = spk.stateVecAt(time - years30, uint32 target, uint32 observer)
   return vec3(sv.pos.x, sv.pos.y, sv.pos.z) * 1000
 
+
+const allSpkUrls = staticRead("spkfiles.txt").splitLines()
+proc downloadSpk*(fileName: string) =
+  ## This function will download a unkown file
+  if fileExists(fileName):
+    return
+  for url in allSpkUrls:
+    if url.endsWith(fileName):
+      echo "downloading: ", url
+      var client = newHttpClient()
+      client.downloadFile(url, fileName)

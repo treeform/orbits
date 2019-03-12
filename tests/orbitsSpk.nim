@@ -26,7 +26,9 @@ for planet in simpleElements:
 
 ctx.setSource(1, 1, 1, 1)
 
-var spkFile = readSpk("tests/de435.bsp")
+downloadSpk("de435.bsp")
+
+var spkFile = readSpk("de435.bsp")
 for planet in simpleElements:
   var step = planet.period / 360
   for i in 0..360:

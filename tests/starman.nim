@@ -2,6 +2,8 @@ import strformat, times
 import ../src/orbits/simple, ../src/orbits/spk, ../src/orbits/horizon
 import quickcairo, vmath
 
+let now = epochTime()
+
 var
   surface = imageSurfaceCreate(FORMAT.argb32, 1000, 1000)
   ctx = surface.newContext()
@@ -45,7 +47,7 @@ block:
   let id = -143205
   let entries = hz.getOrbitalVectors(
     1517904000+DAY,
-    epochTime(),
+    now,
     1000,
     id,
     0)
@@ -57,20 +59,34 @@ block:
 
   let pos = entries[^1].pos / AU
   ctx.lineTo(pos.x, pos.y)
-  ctx.showText("  Starman")
+
 
   echo entries[^1].pos.length / AU
   echo entries[^1].vel.length
 
   let entriesEarth = hz.getOrbitalVectors(
-    epochTime(),
+    now,
     1552284021 + DAY,
     10,
     399,
     0)
 
-  echo (entriesEarth[0].pos - entries[^1].pos).length / 1000 - 6378.1
+  let
+    vel = int(entries[^1].vel.length)
+    dist = int((entriesEarth[0].pos - entries[^1].pos).length / 1000 - 6378.1)
 
+  ctx.save()
+  ctx.moveTo(pos.x, pos.y)
+  ctx.showText("  Starman")
+  ctx.restore()
+  ctx.save()
+  ctx.moveTo(pos.x, pos.y+20/scale)
+  ctx.showText(&"  {$vel}m/s")
+  ctx.restore()
+  ctx.save()
+  ctx.moveTo(pos.x, pos.y+40/scale)
+  ctx.showText(&"  {$dist}km")
+  ctx.restore()
 
 hz.close()
 
