@@ -34,8 +34,9 @@ for planet in simpleElements:
   ctx.stroke()
 
 #spk orbits in blue
+downloadSpk("de435.bsp")
 ctx.setSource(0, 1, 0, 1)
-var spkFile = readSpk("tests/de435.bsp")
+var spkFile = readSpk("de435.bsp")
 for planet in simpleElements:
   var step = planet.period / 360
   for i in 0..360:
@@ -48,11 +49,12 @@ for planet in simpleElements:
 #horizon orbits in white
 ctx.setSource(1, 1, 1, 1)
 for planet in simpleElements:
-  let entries = hz.getOrbitalVectors(
-    0.0,
-    planet.period,
-    360,
-    planet.id, 0)
+  let entries = hz.getOrbitalVectorsSeq(
+    fromTime = 0.0,
+    toTime = planet.period,
+    steps = 360,
+    targetId = planet.id,
+    observerId = 0)
   for entry in entries:
     let pos = entry.pos / AU
     ctx.lineTo(pos.x, pos.y)

@@ -11,14 +11,9 @@ import vmath
 import simple
 
 type
-  dVec3 = object
-    x: float64
-    y: float64
-    z: float64
-
   StateVecs = object
-    pos: dVec3
-    vel: dvec3
+    pos: Vec3
+    vel: Vec3
 
 
 iterator range(start, stop, step: int): int =
@@ -130,14 +125,11 @@ proc readSpk*(filename: string): Spk =
   return spk
 
 
-proc state_type_2(et: float, order: int, data: seq[float64]): StateVecs =
+proc stateType2(et: float, order: int, data: seq[float64]): StateVecs =
   let
     tau = (et - data[0]) / data[1]
-    #start = 2
-    #stop = start + order + 1
     deg = order + 1
     factor = 1.0 / data[1] # unscale time dimension
-
   result.pos.x = chebyshev(order, tau, data[2 + 0 * deg ..< 2 + 1 * deg])
   result.pos.y = chebyshev(order, tau, data[2 + 1 * deg ..< 2 + 2 * deg])
   result.pos.z = chebyshev(order, tau, data[2 + 2 * deg ..< 2 + 3 * deg])
@@ -147,13 +139,10 @@ proc state_type_2(et: float, order: int, data: seq[float64]): StateVecs =
   result.vel.z = der_chebyshev(order, tau, data[2 + 2 * deg ..< 2 + 3 * deg]) * factor
 
 
-proc state_type_3(et: float, order: int, data: seq[float64]): StateVecs =
+proc stateType3(et: float, order: int, data: seq[float64]): StateVecs =
   let
     tau = (et - data[0]) / data[1]
-    #start = 2
-    #stop = start + order + 1
     deg = order + 1
-
   result.pos.x = chebyshev(order, tau, data[2 + 0 * deg ..< 2 + 1 * deg])
   result.pos.y = chebyshev(order, tau, data[2 + 1 * deg ..< 2 + 2 * deg])
   result.pos.z = chebyshev(order, tau, data[2 + 2 * deg ..< 2 + 3 * deg])
@@ -161,6 +150,15 @@ proc state_type_3(et: float, order: int, data: seq[float64]): StateVecs =
   result.vel.x = chebyshev(order, tau, data[2 + 3 * deg ..< 2 + 4 * deg])
   result.vel.y = chebyshev(order, tau, data[2 + 4 * deg ..< 2 + 5 * deg])
   result.vel.z = chebyshev(order, tau, data[2 + 5 * deg ..< 2 + 6 * deg])
+
+
+proc toEclip(sv: StateVecs): StateVecs =
+  ## SPK files store everything in earth equatorial cordiantes JPL horizon calls "frame"
+  ## But we like sun equatorial cordiantes which JPL horizon calls "ecliptic"
+  let EarthObliquity = 23.4368 # axial tilt
+  let m = rotate(EarthObliquity / 180 * PI, vec3(1,0,0))
+  result.pos = m * sv.pos
+  result.vel = m * sv.vel
 
 
 proc stateVecAt*(spk: Spk, time: float64, target, observer: uint32): StateVecs =
@@ -203,9 +201,9 @@ proc stateVecAt*(spk: Spk, time: float64, target, observer: uint32): StateVecs =
     data.add f.readFloat64()
 
   if record.rtype == 2:
-    return state_type_2(time, order, data)
+    return toEclip(stateType2(time, order, data))
   if record.rtype == 3:
-    return state_type_3(time, order, data)
+    return toEclip(stateType3(time, order, data))
   else:
     quit("Only type 3 is implemented")
 

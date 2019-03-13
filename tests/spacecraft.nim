@@ -43,7 +43,7 @@ block:
   #plot voyager1
   ctx.setSource(1, 1, 1, 1)
   let id = -31
-  let entries = hz.getOrbitalVectors(
+  let entries = hz.getOrbitalVectorsSeq(
     242290800+DAY,
     1552284021,
     1000,
@@ -64,7 +64,7 @@ block:
   #plot voyager2
   ctx.setSource(1, 1, 1, 1)
   let id = -32
-  let entries = hz.getOrbitalVectors(
+  let entries = hz.getOrbitalVectorsSeq(
     240908400+DAY,
     1552284021,
     1000,
@@ -84,7 +84,7 @@ block:
   #plot new horizons
   ctx.setSource(1, 1, 1, 1)
   let id = -98
-  let entries = hz.getOrbitalVectors(
+  let entries = hz.getOrbitalVectorsSeq(
     1137657600+DAY,
     1552284021,
     1000,
@@ -105,7 +105,7 @@ block:
 #   #plot Dawn
 #   ctx.setSource(1, 1, 1, 1)
 #   let voyager2Id = -203
-#   let entries = hz.getOrbitalVectors(
+#   let entries = hz.getOrbitalVectorsSeq(
 #     1190876400 + DAY,
 #     1552284021,
 #     1000,

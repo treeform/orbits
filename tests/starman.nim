@@ -45,7 +45,7 @@ ctx.setLineWidth(1/scale)
 block:
   ctx.setSource(1, 1, 1, 1)
   let id = -143205
-  let entries = hz.getOrbitalVectors(
+  let entries = hz.getOrbitalVectorsSeq(
     1517904000+DAY,
     now,
     1000,
@@ -64,16 +64,14 @@ block:
   echo entries[^1].pos.length / AU
   echo entries[^1].vel.length
 
-  let entriesEarth = hz.getOrbitalVectors(
+  let earthOv = hz.getOrbitalVectors(
     now,
-    1552284021 + DAY,
-    10,
     399,
     0)
 
   let
     vel = int(entries[^1].vel.length)
-    dist = int((entriesEarth[0].pos - entries[^1].pos).length / 1000 - 6378.1)
+    dist = int((earthOv.pos - entries[^1].pos).length / 1000 - 6378.1)
 
   ctx.save()
   ctx.moveTo(pos.x, pos.y)

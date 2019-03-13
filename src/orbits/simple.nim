@@ -5,7 +5,7 @@ type
   OrbitalElements* = object
     id*: int # JPL horizon ID
     name*: string # object name
-    om*: float # longitude of the ascending node
+    o*: float # longitude of the ascending node
     i*: float # inclination to the ecliptic (plane of the Earth's orbit)
     w*: float # argument of perihelion
     a*: float # semi-major axis, or mean distance from Sun
@@ -52,7 +52,7 @@ proc toDegrees*(rad: float): float =
 proc posAt*(orbitalElements: OrbitalElements, time: float): Vec3 =
   var d = time / (24*60*60)
 
-  var N = orbitalElements.om  # (Long asc. node)
+  var N = orbitalElements.o   # (Long asc. node)
   var i = orbitalElements.i   # (Inclination)
   var w = orbitalElements.w   # (Arg. of perigee)
   var a = orbitalElements.a   # (Mean distance)

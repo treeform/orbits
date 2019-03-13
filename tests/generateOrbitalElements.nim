@@ -25,12 +25,9 @@ ctx.setSource(1, 1, 1, 1)
 var newElements = newSeq[OrbitalElements]()
 for planet in simpleElements:
   let elements = hz.getOrbitalElements(
-    0.0,
-    planet.period,
-    1,
-    planet.id, 0)
+    0.0, planet.id, 0)
   echo planet.name
-  var planet2 = elements[0]
+  var planet2 = elements
   planet2.id = planet.id
   planet2.name = planet.name
   newElements.add(planet2)
