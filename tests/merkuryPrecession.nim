@@ -33,7 +33,7 @@
 
 
 import ../src/orbits/simple, ../src/orbits/spk
-import quickcairo, vmath
+import quickcairo, ../src/orbits/vmath64
 
 var
   surface = imageSurfaceCreate(FORMAT.argb32, 1000, 1000)

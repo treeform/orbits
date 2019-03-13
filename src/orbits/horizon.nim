@@ -1,5 +1,5 @@
 import net, streams, strutils, os, strutils, strformat
-import vmath, print
+import vmath64, print
 import simple
 
 

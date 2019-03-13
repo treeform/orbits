@@ -1,5 +1,5 @@
 import math, tables, json
-import vmath
+import vmath64
 
 type
   OrbitalElements* = object

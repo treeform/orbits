@@ -7,7 +7,7 @@
 
 
 import streams, print, httpclient, strutils, os
-import vmath
+import vmath64
 import simple
 
 type

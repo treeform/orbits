@@ -90,4 +90,12 @@ Position of SpaceX's launched Starman riding a Elon's Chrry Tesla with NASA's ac
 <img src="tests/starman.png">
 
 
+# Simulations
+
+You can also use this to simulate the solar system:
+
+<img src="tests/orbitsSimulated.png">
+
+
+
 

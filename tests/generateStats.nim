@@ -1,6 +1,6 @@
 import strformat
 import ../src/orbits/simple, ../src/orbits/spk, ../src/orbits/horizon
-import vmath
+import ../src/orbits/vmath64
 
 var hz = newHorizonClient()
 
