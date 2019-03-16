@@ -25,7 +25,10 @@ const J2000* = 2451544.5
 const AU* = 149597870700.0
 const KM* = 1000.0
 const DAY* = 60*60*24
-
+const JULIAN_YEAR* = 365.25 * DAY
+const JULIAN_CENTURY* = 36525 * DAY
+const C* = 299792458
+const G* = 6.67259E-11
 
 proc toJulianDate*(time: float64): float64 =
   (time - Y2000) / DAY + J2000

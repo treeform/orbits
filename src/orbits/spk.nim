@@ -214,6 +214,12 @@ proc posAt*(spk: Spk, time: float64, target, observer: int): Vec3 =
   return vec3(sv.pos.x, sv.pos.y, sv.pos.z) * 1000
 
 
+proc velAt*(spk: Spk, time: float64, target, observer: int): Vec3 =
+  let years30 = 30 * 365.2568984 * 24*60*60
+  let sv = spk.stateVecAt(time - years30, uint32 target, uint32 observer)
+  return vec3(sv.vel.x, sv.vel.y, sv.vel.z) * 1000
+
+
 const allSpkUrls = staticRead("spkfiles.txt").splitLines()
 proc downloadSpk*(fileName: string) =
   ## This function will download a unkown file

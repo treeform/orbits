@@ -22,31 +22,6 @@ ctx.fill()
 
 var hz = newHorizonClient()
 
-# # simple orbits in red
-# ctx.setSource(1, 0, 0, 1)
-# for planet in simpleElements:
-#   var step = planet.period / 360
-#   for i in 0..360:
-#     let time = step * float(i)
-#     let pos = planet.posAt(time) / AU
-#     ctx.lineTo(pos.x, pos.y)
-#   ctx.closePath()
-#   ctx.stroke()
-
-# #spk orbits in blue
-# downloadSpk("de435.bsp")
-# ctx.setSource(0, 1, 0, 1)
-# var spkFile = readSpk("de435.bsp")
-# for planet in simpleElements:
-#   var step = planet.period / 360
-#   for i in 0..360:
-#     let time = step * float(i)
-#     let pos = spkFile.posAt(time, planet.id, 0) / AU
-#     ctx.lineTo(pos.x, pos.y)
-#   ctx.closePath()
-#   ctx.stroke()
-
-
 type Body = object
   id: int
   pos: Vec3
@@ -118,7 +93,6 @@ for step in 0..maxStep:
 
 
 hz.close()
-
 
 
 discard surface.writeToPng("tests/orbitsSimulated.png")
