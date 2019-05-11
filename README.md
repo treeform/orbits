@@ -85,7 +85,7 @@ You can get positions of many things, Including spacecraft:
 
 <img src="tests/spacecraft.png">
 
-Position of SpaceX's launched Starman riding a Elon's Chrry Tesla with NASA's accuracy.
+Position of SpaceX's launched Starman riding a Elon's Cherry Tesla with NASA's accuracy.
 
 <img src="tests/starman.png">
 
