@@ -1,6 +1,6 @@
 import strformat
 import ../src/orbits/simple, ../src/orbits/spk, ../src/orbits/horizon
-import quickcairo, ../src/orbits/vmath64, random
+import quickcairo, ../src/orbits/vmath64, random, math
 import print
 
 
@@ -64,18 +64,6 @@ bodies[8].mass = 1.02E+26
 bodies[9].mass = 1.46E+22
 
 
-proc closetPointOnLine(point, a, b: Vec3): Vec3 =
-  let
-    d = (b - a) / b.dist(a)
-    v = point - a
-    t = v.dot(d)
-    closetPointOnLine = a + t * d
-  return closetPointOnLine
-
-
-proc pointToLineDist(point, a, b: Vec3): float =
-  return closetPointOnLine(point, a, b).dist(point)
-
 
 
 proc minDistance(startTime: float, kick: Vec3, stepTime: float, draw: bool): (float, float) =
@@ -117,12 +105,20 @@ proc minDistance(startTime: float, kick: Vec3, stepTime: float, draw: bool): (fl
       let direction = offset.normalize()
       spaceCraft.vel = spaceCraft.vel + direction * dv * stepTime
 
-    let dist = pointToLineDist(spkFile.posAt(time, 4, 0), spaceCraft.pos, prevPos)
+    let
+      marsPos = spkFile.posAt(time, 4, 0)
+      marsVel = spkFile.velAt(time, 4, 0)
+    let (minMars, minSpaceCraftPos, dist) = computeSegToSeg(marsPos, marsPos + marsVel, spaceCraft.pos, prevPos)
+    #let dist = distPToS(, spaceCraft.pos, prevPos)
+
+    #let dist = (marsPos - spaceCraft.pos).length
+    #print dist, "vs", dist2, abs(dist - dist2) / dist2
 
     if minMarsDist > dist:
       minMarsDist = dist
       minTime = time
-      minPos = closetPointOnLine(spkFile.posAt(time, 4, 0), spaceCraft.pos, prevPos)
+      minPos = minSpaceCraftPos #pointPToS(spkFile.posAt(time, 4, 0), spaceCraft.pos, prevPos)
+
 
     prevPos = spaceCraft.pos
     time += stepTime
@@ -161,11 +157,11 @@ var
 
 
 
-let dayScan = 365
+# let dayScan = 365
 
-let startTime = 1552715293.0
-randomize()
-var minTime: float
+# let startTime = 1552715293.0
+# randomize()
+# var minTime: float
 
 # bestKick = vec3(0, 0, 0)
 # bestMinDist = 1E30
@@ -183,46 +179,210 @@ var minTime: float
 #     let dv = bestKick.length()
 #     print "best scan day: ", bestMinDist, bestTime, dv, bestKick
 
-bestMinDist=91989260.43051194
-bestTime=1593668893.0
-bestKick=vec3(3640.54572089, 660.62610644, 0.03958061)
+
+bestMinDist=3670923806.137688
+bestTime=1594878493.0
+bestKick=vec3(3383.63238149, 1497.00765049, 0.03649411)
 
 
-var
-  vecTime: float
-  vecKick: Vec3
-for accuracy in [10000]:
-  print accuracy
-  let maxSearch = accuracy
-  var a = 1.0
-  var g = 0.10
-  for i in 0..maxSearch:
-    # random search
-    let
-      vecTimeD = DAY * rand(-1.0..1.0)
-      vecKickD = vec3(rand(-1.0..1.0), rand(-1.0..1.0), rand(-0.1..0.1)) * rand(0.0..100.0)
+# var
+#   vecTime: float
+#   vecKick: Vec3
+# for accuracy in [20000]:
+#   print accuracy
+#   let maxSearch = accuracy
+#   var a = 1.0
+#   var g = 0.10
+#   for i in 0..maxSearch:
+#     # random search
+#     let
+#       vecTimeD = DAY * rand(-1.0..1.0)
+#       vecKickD = vec3(rand(-1.0..1.0), rand(-1.0..1.0), rand(-0.1..0.1)) * rand(0.0..100.0)
 
-    vecTime = vecTime * (1-a) + vecTimeD * a
-    vecKick = vecKick * (1-a) + vecKickD * a
+#     vecTime = vecTime * (1-a) + vecTimeD * a
+#     vecKick = vecKick * (1-a) + vecKickD * a
 
-    curTime = bestTime + vecTime * g
-    curKick = bestKick + vecKick * g
+#     curTime = bestTime + vecTime * g
+#     curKick = bestKick + vecKick * g
 
-    (curMinDist, minTime) = minDistance(curTime, curKick, float(accuracy), false)
+#     (curMinDist, minTime) = minDistance(curTime, curKick, float(accuracy), false)
 
-    if curMinDist < bestMinDist:
-      bestMinDist = curMinDist
-      bestTime = curTime
-      bestKick = curKick
+#     if curMinDist < bestMinDist:
+#       bestMinDist = curMinDist
+#       bestTime = curTime
+#       bestKick = curKick
 
-      vecTime *= -0.2
-      vecKick *= -0.2
+#       vecTime *= -0.2
+#       vecKick *= -0.2
 
-      a = 0.0
-      let dv = bestKick.length()
-      print "best search: ", accuracy, i, g, bestMinDist, bestTime, dv, bestKick
+#       a = 0.0
+#       let dv = bestKick.length()
+#       print "best search: ", accuracy, i, g, bestMinDist, bestTime, dv, bestKick
 
-    a = min(1.0, a + 0.01)
+#     a = min(1.0, a + 0.01)
+
+
+
+
+
+# var
+#   adj: array[4, float]
+
+# let accuracy = 20000
+
+# for i in 0..1000:
+#   adj[0] = 0
+#   adj[1] = 0
+#   adj[2] = 0
+#   adj[3] = 0
+
+#   for pick in 0..<4:
+#     adj[pick] = rand(-1.0 .. +1.0)
+
+#     curTime = bestTime + adj[0]
+#     curKick.x = bestKick.x + adj[1]
+#     curKick.y = bestKick.y + adj[2]
+#     curKick.z = bestKick.z + adj[3]
+#     (curMinDist, minTime) = minDistance(curTime, curKick, float(accuracy), false)
+
+#     if curMinDist < bestMinDist:
+#       print "adjusting +1", pick
+
+#       while curMinDist < bestMinDist:
+#         bestMinDist = curMinDist
+#         bestTime = curTime
+#         bestKick = curKick
+#         let dv = bestKick.length()
+#         print "  best search: ", accuracy, bestMinDist, bestTime, dv, bestKick
+
+#         adj[0] *= 1.2
+#         adj[1] *= 1.2
+#         adj[2] *= 1.2
+#         adj[3] *= 1.2
+
+#         curTime = bestTime + adj[0]
+#         curKick.x = bestKick.x + adj[1]
+#         curKick.y = bestKick.y + adj[2]
+#         curKick.z = bestKick.z + adj[3]
+#         (curMinDist, minTime) = minDistance(curTime, curKick, float(accuracy), false)
+
+#       adj[0] *= 0.5
+#       adj[1] *= 0.5
+#       adj[2] *= 0.5
+#       adj[3] *= 0.5
+#       print "end"
+
+#     # flip
+#     adj[0] *= -1
+#     adj[1] *= -1
+#     adj[2] *= -1
+#     adj[3] *= -1
+
+#     curTime = bestTime + adj[0]
+#     curKick.x = bestKick.x + adj[1]
+#     curKick.y = bestKick.y + adj[2]
+#     curKick.z = bestKick.z + adj[3]
+#     (curMinDist, minTime) = minDistance(curTime, curKick, float(accuracy), false)
+
+#     if curMinDist < bestMinDist:
+#       print "adjusting -1", pick
+
+#       while curMinDist < bestMinDist:
+#         bestMinDist = curMinDist
+#         bestTime = curTime
+#         bestKick = curKick
+#         let dv = bestKick.length()
+#         print "  best search: ", accuracy, bestMinDist, bestTime, dv, bestKick
+
+#         adj[0] *= 1.2
+#         adj[1] *= 1.2
+#         adj[2] *= 1.2
+#         adj[3] *= 1.2
+
+#         curTime = bestTime + adj[0]
+#         curKick.x = bestKick.x + adj[1]
+#         curKick.y = bestKick.y + adj[2]
+#         curKick.z = bestKick.z + adj[3]
+#         (curMinDist, minTime) = minDistance(curTime, curKick, float(accuracy), false)
+
+#       print "end"
+
+
+
+
+# let accuracy = 10000
+# print accuracy
+# let maxSearch = 1000
+# var a = 1.0
+
+# for i in 0..maxSearch:
+#   # random search
+#   let
+#     #vecTime = DAY * rand(-1.0..1.0)
+#     vecKick = vec3(rand(-1.0..1.0), rand(-1.0..1.0), rand(-0.1..0.1)) * rand(0.0..10.0)
+
+#   let a = 1.0 - pow(i/maxSearch, 1)
+
+#   #curTime = bestTime + vecTime * a
+#   curKick = bestKick + vecKick * a
+
+#   (curMinDist, minTime) = minDistance(curTime, curKick, float(accuracy), false)
+
+#   if curMinDist < bestMinDist:
+#     bestMinDist = curMinDist
+#     bestTime = curTime
+#     bestKick = curKick
+#     let dv = bestKick.length()
+#     print "best search: ", accuracy, bestMinDist, bestTime, dv, bestKick, i, a
+
+
+
+
+
+
+
+
+# best vector search
+for accuracy in [10000, 1000, 100, 10, 1]:
+  bestMinDist = minDistance(bestTime, bestKick, float(accuracy), false)[0]
+  print accuracy, bestMinDist
+
+  for k in 0..1000:
+    let a = 100 / pow(float(k+1), 2)
+    if a < 10: break
+
+    for i in 0..100:
+      let adjs = @[
+        vec3( 1,  0,  0) * a,
+        vec3( 0,  1,  0) * a,
+        vec3( 0,  0,  1) * a,
+        vec3(-1,  0,  0) * a,
+        vec3( 0, -1,  0) * a,
+        vec3( 0,  0, -1) * a
+      ]
+      var dists = @[0.0,0,0,0,0,0]
+
+      for i in 0..<6:
+        dists[i] = minDistance(bestTime, bestKick + adjs[i], float(accuracy), false)[0]
+        #print dists[i], "vs", bestMinDist
+
+      var
+        minDist = bestMinDist
+        minI = -1
+      for i in 0..<6:
+        if dists[i] < minDist:
+          minI = i
+          minDist = dists[i]
+      if minI == -1:
+        echo "<=="
+        break
+
+      bestKick = bestKick + adjs[minI]
+      bestMinDist = dists[minI]
+      echo "better!", bestMinDist, adjs[minI]
+
+
+
 
 discard minDistance(bestTime, bestKick, 10000, true)
 

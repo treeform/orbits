@@ -23,6 +23,37 @@ proc quantize*(v: float64, n: float64): float64 =
 proc lerp*(a: float64, b: float64, v: float64): float64 =
   a * (1.0 - v) + b * v
 
+proc isInf*(n: float): bool =
+  classify(n) in {fcInf, fcNegInf}
+
+
+proc fixAngle*(angle: float64): float64 =
+  ## Make angle be from -PI to PI radians
+  var angle = angle
+  while angle > PI:
+    angle -= PI*2
+  while angle < -PI:
+    angle += PI*2
+  return angle
+
+
+proc angleBetween*(a, b: float64): float64 =
+  (b - a).fixAngle
+
+
+proc turnAngle*(a, b, speed: float64): float64 =
+  ## Move from angle a to angle b with step of v
+  var
+    turn = fixAngle(b - a)
+  if abs(turn) < speed:
+    return b
+  elif turn > speed:
+    turn = speed
+  elif turn < -speed:
+    turn = -speed
+  return a + turn
+
+
 
 type Vec2* = object
   x*: float64
@@ -137,15 +168,6 @@ proc `$`*(a: Vec2): string =
     a.x.formatfloat(ffDecimal,4) & ", " &
     a.y.formatfloat(ffDecimal,4) & ")"
 
-proc fixAngle*(angle: float64): float64 =
-  ## Make angle be from -PI to PI radians
-  var angle = angle
-  while angle > PI:
-    angle -= PI*2
-  while angle < -PI:
-    angle += PI*2
-  return angle
-
 proc angle*(a: Vec2): float64 =
   ## Angle of a vec2
   #echo "math.arctan2(" & $a.y & "," & $a.x & ") = " & $math.arctan2(a.y, a.x)
@@ -155,22 +177,8 @@ proc angleBetween*(a: Vec2, b: Vec2): float64 =
   ## Angle between 2 vec
   fixAngle(math.arctan2(a.y - b.y, a.x - b.x))
 
-
-proc angleBetween*(a, b: float64): float64 =
-  (b - a).fixAngle
-
-
-proc turnAngle*(a, b, speed: float64): float64 =
-  ## Move from angle a to angle b with step of v
-  var
-    turn = fixAngle(b - a)
-  if abs(turn) < speed:
-    return b
-  elif turn > speed:
-    turn = speed
-  elif turn < -speed:
-    turn = -speed
-  return a + turn
+proc isInf*(a: Vec2): bool =
+  isInf(a.x) or isInf(a.x)
 
 
 type Vec3* = object
@@ -331,6 +339,9 @@ proc zy*(a: Vec3): Vec2 =
 proc almostEquals*(a, b: Vec3, precision = 1e-6): bool =
   let c = a - b
   return abs(c.x) < precision and abs(c.y) < precision and abs(c.z) < precision
+
+proc isInf*(a: Vec3): bool =
+  isInf(a.x) or isInf(a.x) or isInf(a.z)
 
 proc `$`*(a: Vec3): string =
   return "(" &
@@ -1434,3 +1445,84 @@ proc `$`*(a: Rect): string =
     $a.y & ": " &
     $a.w & " x " &
     $a.h & ")"
+
+
+## Line and segments
+proc computeLineToLine*(
+    a0, a1, b0, b1: Vec3,
+    clampA0, clampA1, clampB0, clampB1: bool
+  ): (Vec3, Vec3, float) =
+
+  proc det(a, v1, v2: Vec3): float =
+    return
+      a.x * (v1.y * v2.z - v1.z * v2.y) +
+      a.y * (v1.z * v2.x - v1.x * v2.z) +
+      a.z * (v1.x * v2.y - v1.y * v2.x)
+
+  let
+    a = a1 - a0
+    b = b1 - b0
+    aNorm = a.normalize()
+    bNorm = b.normalize()
+    cross = cross(aNorm, bNorm)
+    denom = pow(cross.length, 2)
+
+  if denom == 0:
+      let
+        d0 = dot(aNorm, b0 - a0)
+      if clampA0 or clampA1 or clampB0 or clampB1:
+          let d1 = dot(aNorm, b1 - a0)
+          if d0 <= 0 and 0 >= d1:
+              if clampA0 and clampB1:
+                  if abs(d0) < abs(d1):
+                      return (b0, a0, (b0 - a0).length)
+                  else:
+                      return (b1, a0, (b1 - a0).length)
+          elif d0 >= a.length and a.length <= d1:
+              if clampA1 and clampB0:
+                  if abs(d0) < abs(d1):
+                      return (b0, a1, (b0 - a1).length)
+                  else:
+                      return (b1, a1, (b1 - a1).length)
+      else:
+        let d = (aNorm * d0 + a0 - b0).length
+        return (vec3(0,0,0), vec3(0,0,0), d)
+  else:
+    let
+      t = b0 - a0
+      det0 = det(t, bNorm, cross)
+      det1 = det(t, aNorm, cross)
+      t0 = det0 / denom
+      t1 = det1 / denom
+    var
+      pA = a0 + aNorm * t0
+      pB = b0 + bNorm * t1
+
+    if clampA0 or clampA1 or clampB0 or clampB1:
+      if t0 < 0 and clampA0:
+        pA = a0
+      elif t0 > a.length and clampA1:
+        pA = a1
+      if t1 < 0 and clampB0:
+        pB = b0;
+      elif t1 > b.length and clampB1:
+        pB = b1;
+
+    var d = (pA - pB).length
+
+    return (pA, pB, d)
+
+
+proc computeSegToSeg*(a0, a1, b0, b1: Vec3): (Vec3, Vec3, float) =
+  computeLineToLine(a0, a1, b0, b1, true, true, true, true)
+
+
+proc computePointToSeg*(point, a, b: Vec3): (Vec3, float) =
+  ##  Point between Point to Segment
+  let
+    d = (b - a) / b.dist(a)
+    v = point - a
+    t = v.dot(d)
+    pointPToS = a + t * d
+  return (pointPToS, pointPToS.dist(point))
+

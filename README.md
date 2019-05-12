@@ -96,6 +96,21 @@ You can also use this to simulate the solar system:
 
 <img src="tests/orbitsSimulated.png">
 
+# Astrometry
 
+You can also draw star fields and compute star positions:
 
+<img src="tests/brightstars.png">
+
+Given an image of a star field you can find the brightest stars and using the stars you can find the patch of sky you are looking at.
+
+<img src="tests/bigdipper.png">
+
+Ever though about navigating by the stars?
+
+<img src="tests/bigdipper_stars.png">
+
+Finding names of stars from a pictures:
+
+<img src="tests/matching.png">
 

@@ -3,7 +3,7 @@
 
 
 import httpclient, json, os, re, strutils, htmlparser, xmltree, sequtils
-import simple
+import simple, utils
 import print
 
 type
@@ -27,20 +27,6 @@ type
 var bodies: seq[Body]
 
 
-proc cutBy(text, startStr, endStr: string): string =
-  let
-    a = text.find(startStr)
-    b = text.find(endStr)
-  return text[a + startStr.len ..< b]
-
-
-proc downloadFileIfNotExists*(url, filePath: string) =
-  if existsFile(filePath):
-    return
-  var client = newHttpClient()
-  client.downloadFile(url, filePath)
-
-
 proc constantsParser*() =
   downloadFileIfNotExists("https://ssd.jpl.nasa.gov/?constants","cache/constants.html")
   var html = readFile("cache/constants.html").replace("&nbsp;", " ").replace("&#177;","+-").replace("<sup>-11</sup> kg<sup>-1</sup> m<sup>3</sup> s<sup>-2</sup><sub> </sub>", "")
@@ -62,9 +48,6 @@ proc constantsParser*() =
         "gravitational constant",
       ]:
       echo name, " = ", value
-
-
-
 
 
 proc planetsParser*() =
