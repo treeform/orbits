@@ -1,6 +1,6 @@
 # Orbits - Orbital Mechanics Library for Nim.
 
-Orbits are beautiful, with their gentle curves and sweeping arcs. They can captivated astronomers for thousands of years and have made mathematics and physics to what they are today. There is so much to the orbits if you dig dipper. Where do you get most accurate data? How do you compute transfer windows? Can you plot trajectories of spacecraft? This is what this library is about. An exploration of deep beyond with Nim at your side.
+Orbits are beautiful, with their gentle curves and sweeping arcs. They have captivated astronomers for thousands of years and have made mathematics and physics to what they are today. There is so much to the orbits if you dig dipper. Where do you get most accurate data? How do you compute transfer windows? Can you plot trajectories of spacecraft? This is what this library is about. An exploration of deep beyond with Nim at your side.
 
 #  Simple Elliptical Orbits.
 
@@ -85,7 +85,7 @@ You can get positions of many things, Including spacecraft:
 
 <img src="tests/spacecraft.png">
 
-Position of SpaceX's launched Starman riding a Elon's Chrry Tesla with NASA's accuracy.
+Position of SpaceX's launched Starman riding a Elon's Cherry Tesla with NASA's accuracy.
 
 <img src="tests/starman.png">
 
