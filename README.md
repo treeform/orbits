@@ -100,7 +100,7 @@ You can also use this to simulate the solar system:
 
 You can also draw star fields and compute star positions:
 
-<img src="tests/brightstars.png">
+<img src="tests/milkyway.png">
 
 Given an image of a star field you can find the brightest stars and using the stars you can find the patch of sky you are looking at.
 

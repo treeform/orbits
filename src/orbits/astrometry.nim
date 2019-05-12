@@ -93,7 +93,7 @@ proc drawMilkyWay() =
   ctx.selectFontFace("Sans", FONT_SLANT.normal, FONT_WEIGHT.normal)
   ctx.setFontSize(12.0)
 
-  ctx.setSource(0.11, 0.14, 0.42, 0.75)
+  ctx.setSource(0.11, 0.14, 0.42, 1)
   ctx.rectangle(0, 0, float surface.width, float surface.height)
   ctx.fill()
 
@@ -112,7 +112,7 @@ proc drawMilkyWay() =
     ctx.fill()
     ctx.closePath()
 
-  discard surface.writeToPng("tests/brightstars.png")
+  discard surface.writeToPng("tests/milkyway.png")
 
 
 proc drawStars3d() =
