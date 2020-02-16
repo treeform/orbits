@@ -171,7 +171,7 @@ is also available.
 
 
 proc smallBodyParser*() =
-  var filePath = "cache/smallBody.csv"
+  var filePath = "db/smallBody.csv"
   if not existsFile(filePath):
     var client = newHttpClient()
     let url = "https://ssd.jpl.nasa.gov/sbdb_query.cgi"
@@ -246,7 +246,7 @@ proc writeBodyDb() =
     s.add $body.equatorialGravity & ","
     s.add $body.escapeVelocityM & ","
     s.add "\n"
-  writeFile("cache/body.db", s)
+  writeFile("db/bigBody.csv", s)
 
 #constantsParser()
 planetsParser()

@@ -49,7 +49,7 @@ var url = (&"""https://planetarynames.wr.usgs.gov/SearchResults?
   &lastUpdatedColumn=true
 """).replace(" ", "").replace("\n", "")
 
-downloadFileIfNotExists(url, "cache/feature.csv")
-writeFile("cache/feature.csv", readFile("cache/feature.csv").strip())
+downloadFileIfNotExists(url, "db/feature.csv")
+writeFile("db/feature.csv", readFile("db/feature.csv").strip())
 
 

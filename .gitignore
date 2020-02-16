@@ -8,3 +8,6 @@
 nimcache
 cache
 *.bsp
+
+# files to big!
+smallBody.csv
