@@ -1,4 +1,4 @@
-import ../src/orbits/vmath64
+import orbits/vmath64
 import print
 
 
@@ -135,8 +135,7 @@ when isMainModule:
       b1 = vec3(26.99, 12.39, 11.18)
     let dist = computeLineToLine(a0, a1, b0, b1, true, true, true, true)
     #let dist = computeLineToLine(a0, a1, b0, b1, false, false, false, false)
-    # echo dist
-    assert $dist == "(Field0: (19.85163563, 26.21609078, 14.07303667), Field1: (26.99000000, 12.39000000, 11.18000000), Field2: 15.82677141213224)"
+    assert $dist == "((19.85163563, 26.21609078, 14.07303667), (26.99000000, 12.39000000, 11.18000000), 15.82677141213224)"
     # pA = [19.851636, 26.216091, 14.073037]
     # pB = [26.990000, 12.390000, 11.180000]
     # d = 15.826771

@@ -8,6 +8,9 @@ proc cutBy*(text, startStr, endStr: string): string =
 
 
 proc downloadFileIfNotExists*(url, filePath: string) =
+  let dir = filePath.splitPath.head
+  if not existsDir(dir):
+    createDir(dir)
   if existsFile(filePath):
     return
   var client = newHttpClient()

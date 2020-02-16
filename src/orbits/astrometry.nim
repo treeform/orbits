@@ -1,5 +1,5 @@
 import flippy, vmath, random, print, chroma, json, strutils
-import quickcairo
+import cairo
 
 
 type Star = object
@@ -88,13 +88,13 @@ proc genStarTris() =
 
 proc drawMilkyWay() =
   var
-    surface = imageSurfaceCreate(FORMAT.argb32, 1000, 500)
-    ctx = surface.newContext()
-  ctx.selectFontFace("Sans", FONT_SLANT.normal, FONT_WEIGHT.normal)
+    surface = imageSurfaceCreate(FORMAT_ARGB32, 1000, 500)
+    ctx = surface.create()
+  ctx.selectFontFace("Sans", FONT_SLANT_NORMAL, FONT_WEIGHT_NORMAL)
   ctx.setFontSize(12.0)
 
-  ctx.setSource(0.11, 0.14, 0.42, 1)
-  ctx.rectangle(0, 0, float surface.width, float surface.height)
+  ctx.setSourceRGBA(0.11, 0.14, 0.42, 1)
+  ctx.rectangle(0, 0, float surface.getWidth, float surface.getHeight)
   ctx.fill()
 
   for star in brightStars:
@@ -102,7 +102,7 @@ proc drawMilkyWay() =
     let
       x = (star.ph / 360) * 1000
       y = (star.th / 180) * 500
-    ctx.setSource(1, 1, 1, 1)
+    ctx.setSourceRGBA(1, 1, 1, 1)
     ctx.newPath()
     ctx.arc(
       x,
@@ -119,10 +119,10 @@ proc drawStars3d() =
 
   # 3d
   var
-    surface = imageSurfaceCreate(FORMAT.argb32, 1000, 1000)
-    ctx = surface.newContext()
-  ctx.setSource(0.11, 0.14, 0.42, 0.75)
-  ctx.rectangle(0, 0, float surface.width, float surface.height)
+    surface = imageSurfaceCreate(FORMAT_ARGB32, 1000, 1000)
+    ctx = surface.create()
+  ctx.setSourceRGBA(0.11, 0.14, 0.42, 0.75)
+  ctx.rectangle(0, 0, float surface.getWidth, float surface.getHeight)
   ctx.fill()
 
   ctx.translate(500, 500)
@@ -142,7 +142,7 @@ proc drawStars3d() =
     if pos.z < 0: continue
     #if "UMi" notin star.name and "UMa" notin star.name: continue
     var s = 10/(star.luma + 1.44 + 1)
-    ctx.setSource(1, 1, 1, 1)
+    ctx.setSourceRGBA(1, 1, 1, 1)
 
     ctx.newPath()
     ctx.arc(
@@ -154,7 +154,7 @@ proc drawStars3d() =
     ctx.closePath()
 
     if star.otherName in ["Polaris", "Pherkad", "Kochab", "Yildun", "Kochab"]: #,    "Dubhe", "Merak", "Megrez", "Phecda", "Alioth", "Alcor", "Mizar", "Alkaid"]:
-      ctx.setSource(1, 0, 0, 0.5)
+      ctx.setSourceRGBA(1, 0, 0, 0.5)
       ctx.newPath()
       ctx.arc(
         pos.x*500,
@@ -165,7 +165,7 @@ proc drawStars3d() =
       ctx.closePath()
 
     if star.otherName in ["Dubhe", "Merak", "Megrez", "Phecda", "Alioth", "Alcor", "Mizar", "Alkaid"]:
-      ctx.setSource(0, 1, 0, 0.5)
+      ctx.setSourceRGBA(0, 1, 0, 0.5)
       ctx.newPath()
       ctx.arc(
         pos.x*500,
@@ -192,20 +192,20 @@ proc analyzeImage() =
 
   var
     image = imageSurfaceCreateFromPng("tests/bigdipper.png")
-    surface = imageSurfaceCreate(FORMAT.argb32, image.width, image.height)
-    ctx = surface.newContext()
+    surface = imageSurfaceCreate(FORMAT_ARGB32, image.getWidth, image.getHeight)
+    ctx = surface.create()
 
-  ctx.setSourceSurface(image, 0, 0)
+  ctx.setSource(image, 0, 0)
   ctx.paint()
 
-  ctx.selectFontFace("Sans", FONT_SLANT.normal, FONT_WEIGHT.normal)
+  ctx.selectFontFace("Sans", FONT_SLANT_NORMAL, FONT_WEIGHT_NORMAL)
   ctx.setFontSize(12.0)
 
-  ctx.setSource(0.11, 0.14, 0.42, 0.75)
-  ctx.rectangle(0, 0, float surface.width, float surface.height)
+  ctx.setSourceRGBA(0.11, 0.14, 0.42, 0.75)
+  ctx.rectangle(0, 0, float surface.getWidth, float surface.getHeight)
   ctx.fill()
 
-  ctx.setSource(1, 1, 1, 1)
+  ctx.setSourceRGBA(1, 1, 1, 1)
   ctx.setLineWidth(1)
 
   proc luma(rgba: ColorRGBA): float =
@@ -309,26 +309,26 @@ proc analyzeImage() =
   thisTri.normalize()
 
   print thisTri
-  var posTrans = -brightestN[thisTri.aID].pos + vec2(float surface.width, float surface.height) / 2.0
+  var posTrans = -brightestN[thisTri.aID].pos + vec2(float surface.getWidth, float surface.getHeight) / 2.0
   print posTrans
   for b in brightestN.mitems:
     b.pos = (b.pos + posTrans)
 
-  ctx.setSource(0.11, 0.14, 0.42, 1)
-  ctx.rectangle(0, 0, float surface.width, float surface.height)
+  ctx.setSourceRGBA(0.11, 0.14, 0.42, 1)
+  ctx.rectangle(0, 0, float surface.getWidth, float surface.getHeight)
   ctx.fill()
 
   ctx.save()
-  ctx.setSourceSurface(image, 0, 0)
+  ctx.setSource(image, 0, 0)
   ctx.paint()
-  ctx.setSource(0.11, 0.14, 0.42, 0.75)
-  ctx.rectangle(0, 0, float surface.width, float surface.height)
+  ctx.setSourceRGBA(0.11, 0.14, 0.42, 0.75)
+  ctx.rectangle(0, 0, float surface.getWidth, float surface.getHeight)
   ctx.fill()
   ctx.restore()
 
   ctx.translate(-posTrans.x, -posTrans.y)
 
-  ctx.setSource(1, 1, 1, 1)
+  ctx.setSourceRGBA(1, 1, 1, 1)
   ctx.setLineWidth(1)
   for i, id in [thisTri.aID, thisTri.bID, thisTri.cID]:
     let spot = brightestN[id]
@@ -356,7 +356,7 @@ proc analyzeImage() =
     ctx.stroke()
     ctx.closePath()
 
-  var goodPixDist = float(max(surface.width, surface.height)) * 0.01
+  var goodPixDist = float(max(surface.getWidth, surface.getHeight)) * 0.01
   var bestError = 1000.0
   var bestMatches = 0
   var bestMat: Mat4
@@ -394,7 +394,7 @@ proc analyzeImage() =
       mat = scaleMat((zoom/zoom2)) * mat
 
       # translate the stars into screen center
-      mat = translate(vec3(float(surface.width)/2.0,  float(surface.height)/2.0, 0.0)) * mat
+      mat = translate(vec3(float(surface.getWidth)/2.0,  float(surface.getHeight)/2.0, 0.0)) * mat
 
       # compute error of the thrid star and spot
 
@@ -417,7 +417,7 @@ proc analyzeImage() =
   for i, id in [bestTri.aId, bestTri.bId, bestTri.cId]:
     let star = brightStars[id]
     var pos = bestMat * star.pos
-    ctx.setSource(0, 1, 0, 1)
+    ctx.setSourceRGBA(0, 1, 0, 1)
     ctx.newPath()
     ctx.arc(
       pos.x,
@@ -433,7 +433,7 @@ proc analyzeImage() =
 
   for star in brightStars:
     var pos = bestMat * star.pos
-    ctx.setSource(1, 0, 0, 1)
+    ctx.setSourceRGBA(1, 0, 0, 1)
     ctx.newPath()
     ctx.arc(
       pos.x,

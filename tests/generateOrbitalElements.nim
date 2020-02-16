@@ -1,13 +1,13 @@
 import strformat
-import ../src/orbits/simple, ../src/orbits/spk, ../src/orbits/horizon
-import quickcairo, ../src/orbits/vmath64
+import orbits/simple, orbits/spk, orbits/horizon
+import cairo, orbits/vmath64
 
 var
-  surface = imageSurfaceCreate(FORMAT.argb32, 1000, 1000)
-  ctx = surface.newContext()
+  surface = imageSurfaceCreate(FORMAT_ARGB32, 1000, 1000)
+  ctx = surface.create()
 
-ctx.setSource(0.11, 0.14, 0.42)
-ctx.rectangle(0, 0, float surface.width, float surface.height)
+ctx.setSourceRGBA(0.11, 0.14, 0.42, 1.0)
+ctx.rectangle(0, 0, float surface.getWidth, float surface.getHeight)
 ctx.fill()
 
 let scale = 10.0
@@ -21,7 +21,7 @@ ctx.fill()
 
 var hz = newHorizonClient()
 import json
-ctx.setSource(1, 1, 1, 1)
+ctx.setSourceRGBA(1, 1, 1, 1)
 var newElements = newSeq[OrbitalElements]()
 for planet in simpleElements:
   let elements = hz.getOrbitalElements(

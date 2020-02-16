@@ -1,13 +1,13 @@
 import strformat
-import ../src/orbits/simple, ../src/orbits/spk, ../src/orbits/horizon
-import quickcairo, ../src/orbits/vmath64
+import orbits/simple, orbits/spk, orbits/horizon
+import cairo, orbits/vmath64
 
 var
-  surface = imageSurfaceCreate(FORMAT.argb32, 1000, 1000)
-  ctx = surface.newContext()
+  surface = imageSurfaceCreate(FORMAT_ARGB32, 1000, 1000)
+  ctx = surface.create()
 
-ctx.setSource(0.11, 0.14, 0.42)
-ctx.rectangle(0, 0, float surface.width, float surface.height)
+ctx.setSourceRGBA(0.11, 0.14, 0.42, 1.0)
+ctx.rectangle(0, 0, float surface.getWidth, float surface.getHeight)
 ctx.fill()
 
 let scale = 250.0
@@ -16,7 +16,7 @@ ctx.translate(500, 500)
 ctx.scale(scale, scale)
 ctx.setLineWidth(1/scale)
 
-ctx.setSource(1, 1, 1, 1)
+ctx.setSourceRGBA(1, 1, 1, 1)
 ctx.arc(0, 0, 0.00464, 0.0, 2.0*PI)
 ctx.fill()
 
@@ -35,7 +35,7 @@ body.id = 0
 bodies.add body
 
 # get inital obits from horizon
-ctx.setSource(1, 1, 1, 0.1)
+ctx.setSourceRGBA(1, 1, 1, 0.1)
 for planet in simpleElements:
   let entries = hz.getOrbitalVectorsSeq(
     fromTime = 0.0,
@@ -87,7 +87,7 @@ for step in 0..maxStep:
   if step mod (maxStep div 50) == 0:
 
     for body in bodies:
-      ctx.setSource(1, 1, 1, step/maxStep + 0.1)
+      ctx.setSourceRGBA(1, 1, 1, step/maxStep + 0.1)
       ctx.arc(body.pos.x/AU, body.pos.y/AU, 3/scale, 0.0, 2.0*PI)
       ctx.fill()
 

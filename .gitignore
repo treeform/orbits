@@ -6,3 +6,5 @@
 # normal ignores:
 *.exe
 nimcache
+cache
+*.bsp

@@ -1,4 +1,4 @@
-import ../src/orbits/solvers, print
+import orbits/solvers, print
 
 
 print MACHINE_EPSILON
