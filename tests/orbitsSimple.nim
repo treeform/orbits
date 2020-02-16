@@ -1,12 +1,11 @@
-import ../src/orbits/simple
-import quickcairo, ../src/orbits/vmath64
+import orbits/simple, orbits/vmath64, cairo
 
 var
-  surface = imageSurfaceCreate(FORMAT.argb32, 1000, 1000)
-  ctx = surface.newContext()
+  surface = imageSurfaceCreate(FORMAT_ARGB32, 1000, 1000)
+  ctx = surface.create()
 
-ctx.setSource(0.11, 0.14, 0.42)
-ctx.rectangle(0, 0, float surface.width, float surface.height)
+ctx.setSourceRGB(0.11, 0.14, 0.42)
+ctx.rectangle(0, 0, float surface.getWidth, float surface.getHeight)
 ctx.fill()
 
 
@@ -16,7 +15,7 @@ ctx.translate(500, 500)
 ctx.scale(scale, scale)
 ctx.setLineWidth(1/scale)
 
-ctx.setSource(1, 1, 1, 1)
+ctx.setSourceRGBA(1, 1, 1, 1)
 ctx.arc(0, 0, 0.00464, 0.0, 2.0*PI)
 ctx.fill()
 
