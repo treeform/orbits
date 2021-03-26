@@ -1,5 +1,5 @@
 import net, streams, strutils, os, strutils, strformat
-import vmath64, print
+import vmath, print
 import simple
 
 
@@ -169,7 +169,7 @@ proc parseOrbitalVectors*(data: string): seq[OrbitalVectors] =
       entry.time = time
 
     if line.startsWith(" X"):
-      var p = vec3(
+      var p = dvec3(
         parseFloat(line[4..25].strip()),
         parseFloat(line[30..51].strip()),
         parseFloat(line[56..77].strip()))
@@ -177,7 +177,7 @@ proc parseOrbitalVectors*(data: string): seq[OrbitalVectors] =
       entry.pos = p
 
     if line.startsWith(" VX"):
-      var v = vec3(
+      var v = dvec3(
         parseFloat(line[4..25].strip()),
         parseFloat(line[30..51].strip()),
         parseFloat(line[56..77].strip()))
@@ -186,7 +186,7 @@ proc parseOrbitalVectors*(data: string): seq[OrbitalVectors] =
       orbitData.add(entry)
 
     if line.startsWith("VX"):
-      var v = vec3(
+      var v = dvec3(
         parseFloat(line[3..24].strip()),
         parseFloat(line[29..50].strip()),
         parseFloat(line[55..76].strip()))
@@ -362,7 +362,7 @@ proc getRotationAxis*(
     hz: HorizonClient,
     time: float64,
     targetId: int
-  ): Vec3 =
+  ): DVec3 =
   ## Get a normalized vector that the body rotation around.
   let data = hz.getOrbitalData(
     "v",
@@ -400,7 +400,3 @@ proc getRotationAngularSpeed*(
       vec2 = parseOrbitalVectors(data)[i+1].pos
     result += vec1.angleBetween(vec2) / timeScale
   result = result / 24
-
-
-
-

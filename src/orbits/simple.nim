@@ -1,22 +1,22 @@
 import math, tables, json
-import vmath64
+import vmath
 
 type
   OrbitalElements* = object
     id*: int # JPL horizon ID
     name*: string # object name
-    o*: float # longitude of the ascending node
-    i*: float # inclination to the ecliptic (plane of the Earth's orbit)
-    w*: float # argument of perihelion
-    a*: float # semi-major axis, or mean distance from Sun
-    e*: float # eccentricity (0=circle, 0-1=ellipse, 1=parabola)
-    m*: float # mean anomaly (0 at perihelion increases uniformly with time)
-    n*: float # Mean motion
+    o*: float64 # longitude of the ascending node
+    i*: float64 # inclination to the ecliptic (plane of the Earth's orbit)
+    w*: float64 # argument of perihelion
+    a*: float64 # semi-major axis, or mean distance from Sun
+    e*: float64 # eccentricity (0=circle, 0-1=ellipse, 1=parabola)
+    m*: float64 # mean anomaly (0 at perihelion increases uniformly with time)
+    n*: float64 # Mean motion
 
 
   OrbitalVectors* = object
-    pos*: Vec3 # position
-    vel*: Vec3 # velocity
+    pos*: DVec3 # position
+    vel*: DVec3 # velocity
     time*: float64 # time
 
 
@@ -37,22 +37,16 @@ proc toJulianDate*(time: float64): float64 =
 const elementsData = staticRead("elements.json")
 var simpleElements* = parseJson(elementsData).to(seq[OrbitalElements])
 
-proc period*(oe: OrbitalElements): float =
+proc period*(oe: OrbitalElements): float64 =
   return 365.2568984 * pow(oe.a, 1.5) * 24*60*60
 
-proc rev*(x: float): float =
+proc rev*(x: float64): float64 =
   var rv = x - round(x / 360.0) * 360.0
   if rv < 0.0:
     rv = rv + 360.0
   return rv
 
-proc toRadians*(deg: float): float =
-  return PI * deg / 180.0
-
-proc toDegrees*(rad: float): float =
-  return rev(180.0 * rad / PI)
-
-proc posAt*(orbitalElements: OrbitalElements, time: float): Vec3 =
+proc posAt*(orbitalElements: OrbitalElements, time: float64): DVec3 =
   var d = time / (24*60*60)
 
   var N = orbitalElements.o   # (Long asc. node)
@@ -97,4 +91,4 @@ proc posAt*(orbitalElements: OrbitalElements, time: float): Vec3 =
   var RA   = toDegrees(arctan2(yeclip, xeclip))
   var Decl = toDegrees(arcsin(zeclip / r))
 
-  return vec3(xeclip, yeclip, zeclip) * AU
+  return dvec3(xeclip, yeclip, zeclip) * AU

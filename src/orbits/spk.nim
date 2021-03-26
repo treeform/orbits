@@ -6,14 +6,14 @@
 ##
 
 
-import streams, print, httpclient, strutils, os
-import vmath64
+import streams, print, puppy, strutils, os
+import vmath
 import simple
 
 type
   StateVecs = object
-    pos: Vec3
-    vel: Vec3
+    pos: DVec3
+    vel: DVec3
 
 
 iterator range(start, stop, step: int): int =
@@ -28,7 +28,7 @@ iterator range(start, stop, step: int): int =
       at += step
 
 
-proc chebyshev(order: int, x: float, data: seq[float]): float =
+proc chebyshev(order: int, x: float64, data: seq[float64]): float64 =
   # Evaluate a Chebyshev polynomial
   var
     two_x = 2 * x
@@ -41,14 +41,14 @@ proc chebyshev(order: int, x: float, data: seq[float]): float =
   return data[0] + x * bkp1 - bkp2
 
 
-proc der_chebyshev(order: int, x: float, data: seq[float]): float =
+proc der_chebyshev(order: int, x: float64, data: seq[float64]): float64 =
   # Evaluate the derivative of a Chebyshev polynomial
   var
     two_x = 2 * x
-    bkp2 = float(order) * data[order]
-    bkp1 = two_x * bkp2 + float(order - 1) * data[order - 1]
+    bkp2 = float64(order) * data[order]
+    bkp1 = two_x * bkp2 + float64(order - 1) * data[order - 1]
   for n in range(order - 2, 1, -1):
-    let bk = float(n) * data[n] + two_x * bkp1 - bkp2
+    let bk = float64(n) * data[n] + two_x * bkp1 - bkp2
     bkp2 = bkp1
     bkp1 = bk
   return data[1] + two_x * bkp1 - bkp2
@@ -125,7 +125,7 @@ proc readSpk*(filename: string): Spk =
   return spk
 
 
-proc stateType2(et: float, order: int, data: seq[float64]): StateVecs =
+proc stateType2(et: float64, order: int, data: seq[float64]): StateVecs =
   let
     tau = (et - data[0]) / data[1]
     deg = order + 1
@@ -139,7 +139,7 @@ proc stateType2(et: float, order: int, data: seq[float64]): StateVecs =
   result.vel.z = der_chebyshev(order, tau, data[2 + 2 * deg ..< 2 + 3 * deg]) * factor
 
 
-proc stateType3(et: float, order: int, data: seq[float64]): StateVecs =
+proc stateType3(et: float64, order: int, data: seq[float64]): StateVecs =
   let
     tau = (et - data[0]) / data[1]
     deg = order + 1
@@ -156,7 +156,7 @@ proc toEclip(sv: StateVecs): StateVecs =
   ## SPK files store everything in earth equatorial cordiantes JPL horizon calls "frame"
   ## But we like sun equatorial cordiantes which JPL horizon calls "ecliptic"
   let EarthObliquity = 23.4368 # axial tilt
-  let m = rotate(EarthObliquity / 180 * PI, vec3(1,0,0))
+  let m = rotate(EarthObliquity / 180 * PI, dvec3(1,0,0))
   result.pos = m * sv.pos
   result.vel = m * sv.vel
 
@@ -208,16 +208,16 @@ proc stateVecAt*(spk: Spk, time: float64, target, observer: uint32): StateVecs =
     quit("Only type 3 is implemented")
 
 
-proc posAt*(spk: Spk, time: float64, target, observer: int): Vec3 =
+proc posAt*(spk: Spk, time: float64, target, observer: int): DVec3 =
   let years30 = 30 * 365.2568984 * 24*60*60
   let sv = spk.stateVecAt(time - years30, uint32 target, uint32 observer)
-  return vec3(sv.pos.x, sv.pos.y, sv.pos.z) * 1000
+  return dvec3(sv.pos.x, sv.pos.y, sv.pos.z) * 1000
 
 
-proc velAt*(spk: Spk, time: float64, target, observer: int): Vec3 =
+proc velAt*(spk: Spk, time: float64, target, observer: int): DVec3 =
   let years30 = 30 * 365.2568984 * 24*60*60
   let sv = spk.stateVecAt(time - years30, uint32 target, uint32 observer)
-  return vec3(sv.vel.x, sv.vel.y, sv.vel.z) * 1000
+  return dvec3(sv.vel.x, sv.vel.y, sv.vel.z) * 1000
 
 
 const allSpkUrls = staticRead("spkfiles.txt").splitLines()
@@ -228,5 +228,4 @@ proc downloadSpk*(fileName: string) =
   for url in allSpkUrls:
     if url.endsWith(fileName):
       echo "downloading: ", url
-      var client = newHttpClient()
-      client.downloadFile(url, fileName)
+      writeFile(fileName, puppy.fetch(url))

@@ -1,4 +1,4 @@
-import os, strutils, httpclient
+import os, strutils, puppy
 
 proc cutBy*(text, startStr, endStr: string): string =
   let a = text.find(startStr)
@@ -16,5 +16,4 @@ proc downloadFileIfNotExists*(url, filePath: string) =
     createDir(dir)
   if existsFile(filePath):
     return
-  var client = newHttpClient()
-  client.downloadFile(url, filePath)
+  writeFile(puppy.fetch(url), filePath)

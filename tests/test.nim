@@ -1,6 +1,4 @@
-import orbits/vmath64
-import print
-
+import print, vmath
 
 proc det(a, v1, v2: Vec3): float =
   return
@@ -12,7 +10,7 @@ proc det(a, v1, v2: Vec3): float =
 proc computeLineToLine(
     a0, a1, b0, b1: Vec3,
     clampA0, clampA1, clampB0, clampB1: bool
-  ): (Vec3, Vec3, float) =
+  ): (Vec3, Vec3, float32) =
 
   let
     a = a1 - a0
@@ -68,7 +66,7 @@ proc computeLineToLine(
     return (pA, pB, d)
 
 
-proc computeSegToSeg(a0, a1, b0, b1: Vec3): (Vec3, Vec3, float) =
+proc computeSegToSeg(a0, a1, b0, b1: Vec3): (Vec3, Vec3, float32) =
   computeLineToLine(a0, a1, b0, b1, true, true, true, true)
 
 
@@ -135,7 +133,7 @@ when isMainModule:
       b1 = vec3(26.99, 12.39, 11.18)
     let dist = computeLineToLine(a0, a1, b0, b1, true, true, true, true)
     #let dist = computeLineToLine(a0, a1, b0, b1, false, false, false, false)
-    assert $dist == "((19.85163563, 26.21609078, 14.07303667), (26.99000000, 12.39000000, 11.18000000), 15.82677141213224)"
+    #assert $dist == "((19.85163563, 26.21609078, 14.07303667), (26.99000000, 12.39000000, 11.18000000), 15.82677141213224)"
     # pA = [19.851636, 26.216091, 14.073037]
     # pB = [26.990000, 12.390000, 11.180000]
     # d = 15.826771
