@@ -222,6 +222,15 @@ proc getOrbitalVectorsSeq*(
   )
   return parseOrbitalVectors(data)
 
+iterator pairwise[T](s: seq[T]): (T, T) =
+  for i in 0 ..< s.len - 1:
+    yield(s[i], s[i + 1])
+
+proc posAt*(entries: seq[OrbitalVectors], time: float64): DVec3 =
+  for a, b in entries.pairwise:
+    if time >= a.time and time < b.time:
+      let diff = (time - a.time) / (b.time - a.time)
+      return lerp(a.pos, b.pos, diff)
 
 proc getOrbitalVectors*(
     hz: HorizonClient,
@@ -398,5 +407,5 @@ proc getRotationAngularSpeed*(
     let
       vec1 = parseOrbitalVectors(data)[i].pos
       vec2 = parseOrbitalVectors(data)[i+1].pos
-    result += vec1.angleBetween(vec2) / timeScale
+    result += vec1.angle(vec2) / timeScale
   result = result / 24

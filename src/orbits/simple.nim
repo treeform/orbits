@@ -33,7 +33,6 @@ const G* = 6.67259E-11
 proc toJulianDate*(time: float64): float64 =
   (time - Y2000) / DAY + J2000
 
-
 const elementsData = staticRead("elements.json")
 var simpleElements* = parseJson(elementsData).to(seq[OrbitalElements])
 
@@ -45,6 +44,12 @@ proc rev*(x: float64): float64 =
   if rv < 0.0:
     rv = rv + 360.0
   return rv
+
+proc toRadians*(deg: float): float =
+  return PI * deg / 180.0
+
+proc toDegrees*(rad: float): float =
+  return rev(180.0 * rad / PI)
 
 proc posAt*(orbitalElements: OrbitalElements, time: float64): DVec3 =
   var d = time / (24*60*60)

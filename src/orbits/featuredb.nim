@@ -51,5 +51,3 @@ var url = (&"""https://planetarynames.wr.usgs.gov/SearchResults?
 
 downloadFileIfNotExists(url, "db/feature.csv")
 writeFile("db/feature.csv", readFile("db/feature.csv").strip())
-
-
