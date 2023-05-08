@@ -1,7 +1,7 @@
 # Package
 
 version       = "0.1.0"
-author        = "treeform"
+author        = "Andre von Houck"
 description   = "Orbits - orbital mechanics library for nim."
 license       = "MIT"
 srcDir        = "src"
