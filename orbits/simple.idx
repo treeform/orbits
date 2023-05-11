@@ -1,0 +1,18 @@
+OrbitalElements	orbits/simple.html#OrbitalElements	simple: OrbitalElements	
+OrbitalVectors	orbits/simple.html#OrbitalVectors	simple: OrbitalVectors	
+Y2000	orbits/simple.html#Y2000	simple: Y2000	
+J2000	orbits/simple.html#J2000	simple: J2000	
+AU	orbits/simple.html#AU	simple: AU	
+KM	orbits/simple.html#KM	simple: KM	
+DAY	orbits/simple.html#DAY	simple: DAY	
+JULIAN_YEAR	orbits/simple.html#JULIAN_YEAR	simple: JULIAN_YEAR	
+JULIAN_CENTURY	orbits/simple.html#JULIAN_CENTURY	simple: JULIAN_CENTURY	
+C	orbits/simple.html#C	simple: C	
+G	orbits/simple.html#G	simple: G	
+toJulianDate	orbits/simple.html#toJulianDate,float64	simple: toJulianDate(time: float64): float64	
+simpleElements	orbits/simple.html#simpleElements	simple: simpleElements	
+period	orbits/simple.html#period,OrbitalElements	simple: period(oe: OrbitalElements): float64	
+rev	orbits/simple.html#rev,float64	simple: rev(x: float64): float64	
+toRadians	orbits/simple.html#toRadians,float	simple: toRadians(deg: float): float	
+toDegrees	orbits/simple.html#toDegrees,float	simple: toDegrees(rad: float): float	
+posAt	orbits/simple.html#posAt,OrbitalElements,float64	simple: posAt(orbitalElements: OrbitalElements; time: float64): DVec3	

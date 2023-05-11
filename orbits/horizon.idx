@@ -1,0 +1,14 @@
+HorizonClient	orbits/horizon.html#HorizonClient	horizon: HorizonClient	
+newHorizonClient	orbits/horizon.html#newHorizonClient	horizon: newHorizonClient(): HorizonClient	
+getOrbitalData	orbits/horizon.html#getOrbitalData,HorizonClient,string,string,string,string,int,int,string,string	horizon: getOrbitalData(hz: HorizonClient; format: string; fromTime: string;\n               toTime: string; duration: string; targetId, observerId: int;\n               cordinates: string; reference: string = &quot;eclip&quot;): string	
+parseOrbitalVectors	orbits/horizon.html#parseOrbitalVectors,string	horizon: parseOrbitalVectors(data: string): seq[OrbitalVectors]	
+close	orbits/horizon.html#close,HorizonClient	horizon: close(hz: HorizonClient)	
+getOrbitalVectorsSeq	orbits/horizon.html#getOrbitalVectorsSeq,HorizonClient,float64,float64,int,int,int	horizon: getOrbitalVectorsSeq(hz: HorizonClient; fromTime: float64; toTime: float64;\n                     steps: int; targetId: int; observerId: int): seq[\n    OrbitalVectors]	
+posAt	orbits/horizon.html#posAt,seq[OrbitalVectors],float64	horizon: posAt(entries: seq[OrbitalVectors]; time: float64): DVec3	
+getOrbitalVectors	orbits/horizon.html#getOrbitalVectors,HorizonClient,float64,int,int	horizon: getOrbitalVectors(hz: HorizonClient; time: float64; targetId: int;\n                  observerId: int): OrbitalVectors	
+parseOrbitalElements	orbits/horizon.html#parseOrbitalElements,string	horizon: parseOrbitalElements(data: string): seq[OrbitalElements]	
+getOrbitalElementsSeq	orbits/horizon.html#getOrbitalElementsSeq,HorizonClient,float64,float64,int,int,int	horizon: getOrbitalElementsSeq(hz: HorizonClient; fromTime: float64; toTime: float64;\n                      steps: int; targetId: int; observerId: int): seq[\n    OrbitalElements]	
+getOrbitalElements	orbits/horizon.html#getOrbitalElements,HorizonClient,float64,int,int	horizon: getOrbitalElements(hz: HorizonClient; time: float64; targetId: int;\n                   observerId: int): OrbitalElements	
+getRadius	orbits/horizon.html#getRadius,HorizonClient,float64,int	horizon: getRadius(hz: HorizonClient; time: float64; targetId: int): float	
+getRotationAxis	orbits/horizon.html#getRotationAxis,HorizonClient,float64,int	horizon: getRotationAxis(hz: HorizonClient; time: float64; targetId: int): DVec3	
+getRotationAngularSpeed	orbits/horizon.html#getRotationAngularSpeed,HorizonClient,float64,int	horizon: getRotationAngularSpeed(hz: HorizonClient; time: float64; targetId: int): float	
