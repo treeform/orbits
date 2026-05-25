@@ -1,14 +1,15 @@
-HorizonClient	orbits/horizon.html#HorizonClient	horizon: HorizonClient	
-newHorizonClient	orbits/horizon.html#newHorizonClient	horizon: newHorizonClient(): HorizonClient	
-getOrbitalData	orbits/horizon.html#getOrbitalData,HorizonClient,string,string,string,string,int,int,string,string	horizon: getOrbitalData(hz: HorizonClient; format: string; fromTime: string;\n               toTime: string; duration: string; targetId, observerId: int;\n               cordinates: string; reference: string = &quot;eclip&quot;): string	
-parseOrbitalVectors	orbits/horizon.html#parseOrbitalVectors,string	horizon: parseOrbitalVectors(data: string): seq[OrbitalVectors]	
-close	orbits/horizon.html#close,HorizonClient	horizon: close(hz: HorizonClient)	
-getOrbitalVectorsSeq	orbits/horizon.html#getOrbitalVectorsSeq,HorizonClient,float64,float64,int,int,int	horizon: getOrbitalVectorsSeq(hz: HorizonClient; fromTime: float64; toTime: float64;\n                     steps: int; targetId: int; observerId: int): seq[\n    OrbitalVectors]	
-posAt	orbits/horizon.html#posAt,seq[OrbitalVectors],float64	horizon: posAt(entries: seq[OrbitalVectors]; time: float64): DVec3	
-getOrbitalVectors	orbits/horizon.html#getOrbitalVectors,HorizonClient,float64,int,int	horizon: getOrbitalVectors(hz: HorizonClient; time: float64; targetId: int;\n                  observerId: int): OrbitalVectors	
-parseOrbitalElements	orbits/horizon.html#parseOrbitalElements,string	horizon: parseOrbitalElements(data: string): seq[OrbitalElements]	
-getOrbitalElementsSeq	orbits/horizon.html#getOrbitalElementsSeq,HorizonClient,float64,float64,int,int,int	horizon: getOrbitalElementsSeq(hz: HorizonClient; fromTime: float64; toTime: float64;\n                      steps: int; targetId: int; observerId: int): seq[\n    OrbitalElements]	
-getOrbitalElements	orbits/horizon.html#getOrbitalElements,HorizonClient,float64,int,int	horizon: getOrbitalElements(hz: HorizonClient; time: float64; targetId: int;\n                   observerId: int): OrbitalElements	
-getRadius	orbits/horizon.html#getRadius,HorizonClient,float64,int	horizon: getRadius(hz: HorizonClient; time: float64; targetId: int): float	
-getRotationAxis	orbits/horizon.html#getRotationAxis,HorizonClient,float64,int	horizon: getRotationAxis(hz: HorizonClient; time: float64; targetId: int): DVec3	
-getRotationAngularSpeed	orbits/horizon.html#getRotationAngularSpeed,HorizonClient,float64,int	horizon: getRotationAngularSpeed(hz: HorizonClient; time: float64; targetId: int): float	
+nimTitle	horizon	orbits/horizon.html	module orbits/horizon		0
+nim	HorizonClient	orbits/horizon.html#HorizonClient	type HorizonClient		7
+nim	newHorizonClient	orbits/horizon.html#newHorizonClient	proc newHorizonClient(): HorizonClient		21
+nim	getOrbitalData	orbits/horizon.html#getOrbitalData,HorizonClient,string,string,string,string,int,int,string,string	proc getOrbitalData(hz: HorizonClient; format: string; fromTime: string;\n               toTime: string; duration: string; targetId, observerId: int;\n               cordinates: string; reference: string = "eclip"): string		28
+nim	parseOrbitalVectors	orbits/horizon.html#parseOrbitalVectors,string	proc parseOrbitalVectors(data: string): seq[OrbitalVectors]		151
+nim	close	orbits/horizon.html#close,HorizonClient	proc close(hz: HorizonClient)		201
+nim	getOrbitalVectorsSeq	orbits/horizon.html#getOrbitalVectorsSeq,HorizonClient,float64,float64,int,int,int	proc getOrbitalVectorsSeq(hz: HorizonClient; fromTime: float64; toTime: float64;\n                     steps: int; targetId: int; observerId: int): seq[\n    OrbitalVectors]		206
+nim	posAt	orbits/horizon.html#posAt,seq[OrbitalVectors],float64	proc posAt(entries: seq[OrbitalVectors]; time: float64): DVec3		229
+nim	getOrbitalVectors	orbits/horizon.html#getOrbitalVectors,HorizonClient,float64,int,int	proc getOrbitalVectors(hz: HorizonClient; time: float64; targetId: int;\n                  observerId: int): OrbitalVectors		235
+nim	parseOrbitalElements	orbits/horizon.html#parseOrbitalElements,string	proc parseOrbitalElements(data: string): seq[OrbitalElements]		253
+nim	getOrbitalElementsSeq	orbits/horizon.html#getOrbitalElementsSeq,HorizonClient,float64,float64,int,int,int	proc getOrbitalElementsSeq(hz: HorizonClient; fromTime: float64; toTime: float64;\n                      steps: int; targetId: int; observerId: int): seq[\n    OrbitalElements]		311
+nim	getOrbitalElements	orbits/horizon.html#getOrbitalElements,HorizonClient,float64,int,int	proc getOrbitalElements(hz: HorizonClient; time: float64; targetId: int;\n                   observerId: int): OrbitalElements		332
+nim	getRadius	orbits/horizon.html#getRadius,HorizonClient,float64,int	proc getRadius(hz: HorizonClient; time: float64; targetId: int): float		351
+nim	getRotationAxis	orbits/horizon.html#getRotationAxis,HorizonClient,float64,int	proc getRotationAxis(hz: HorizonClient; time: float64; targetId: int): DVec3		370
+nim	getRotationAngularSpeed	orbits/horizon.html#getRotationAngularSpeed,HorizonClient,float64,int	proc getRotationAngularSpeed(hz: HorizonClient; time: float64; targetId: int): float		390

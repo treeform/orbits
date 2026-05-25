@@ -1,6 +1,7 @@
-Record	orbits/spk.html#Record	spk: Record	
-readSpk	orbits/spk.html#readSpk,string	spk: readSpk(filename: string): Spk	
-stateVecAt	orbits/spk.html#stateVecAt,Spk,float64,uint32,uint32	spk: stateVecAt(spk: Spk; time: float64; target, observer: uint32): StateVecs	
-posAt	orbits/spk.html#posAt,Spk,float64,int,int	spk: posAt(spk: Spk; time: float64; target, observer: int): DVec3	
-velAt	orbits/spk.html#velAt,Spk,float64,int,int	spk: velAt(spk: Spk; time: float64; target, observer: int): DVec3	
-downloadSpk	orbits/spk.html#downloadSpk,string	spk: downloadSpk(fileName: string)	
+nimTitle	spk	orbits/spk.html	module orbits/spk		0
+nim	Record	orbits/spk.html#Record	object Record		62
+nim	readSpk	orbits/spk.html#readSpk,string	proc readSpk(filename: string): Spk		72
+nim	stateVecAt	orbits/spk.html#stateVecAt,Spk,float64,uint32,uint32	proc stateVecAt(spk: Spk; time: float64; target, observer: uint32): StateVecs		164
+nim	posAt	orbits/spk.html#posAt,Spk,float64,int,int	proc posAt(spk: Spk; time: float64; target, observer: int): DVec3		211
+nim	velAt	orbits/spk.html#velAt,Spk,float64,int,int	proc velAt(spk: Spk; time: float64; target, observer: int): DVec3		217
+nim	downloadSpk	orbits/spk.html#downloadSpk,string	proc downloadSpk(fileName: string)		224
