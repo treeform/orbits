@@ -20,7 +20,7 @@ proc computeLineToLine(
     cross = cross(aNorm, bNorm)
     denom = pow(cross.length, 2)
 
-  if denom == 0:
+  if denom < 0.00001:
       let
         d0 = dot(aNorm, b0 - a0)
       if clampA0 or clampA1 or clampB0 or clampB1:
