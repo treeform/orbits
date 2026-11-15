@@ -1,5 +1,5 @@
 import strformat, times
-import orbits/simple, orbits/spk#, orbits/vmath64
+import orbits/simple, orbits/spk
 import ../demo/window
 
 let now = epochTime()
