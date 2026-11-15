@@ -1,6 +1,6 @@
 import strformat, times
 import orbits/simple, orbits/spk#, orbits/vmath64
-import pixie/demo, vmath
+import ../demo/window
 
 let now = epochTime()
 
@@ -18,13 +18,13 @@ while true:
   let scaleK = 10.0
   var mat = translate(vec2(400, 300)) * scale(vec2(scaleK, scaleK))
 
-  var path: Path
-  path.circle(vec2(0, 0), 0.1)
+  let path = newPath()
+  path.circle(0, 0, 0.1)
   screen.fillPath(path, color(1,1,1,1), mat)
 
   for planet in simpleElements:
     var step = planet.period / 360
-    var path: Path
+    let path = newPath()
 
     for i in 0..360:
       let time = step * float(i)
@@ -37,8 +37,8 @@ while true:
 
 
     var currentPos = spkFile.posAt(currentTime, planet.id, 0) / AU
-    var pathBody: Path
-    pathBody.circle(vec3(currentPos).xy, 0.1)
+    let pathBody = newPath()
+    pathBody.ellipse(vec3(currentPos).xy, 0.1, 0.1)
     screen.fillPath(pathBody, color(1,1,1,1), mat)
 
     screen.strokePath(path, color(1, 1, 1, 0.1), mat, strokeWidth = 0.1)

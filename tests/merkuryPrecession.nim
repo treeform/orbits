@@ -33,7 +33,7 @@
 
 
 import orbits/simple, orbits/spk
-import cairo, orbits/vmath64
+import cairo, vmath
 
 var
   surface = imageSurfaceCreate(FORMAT_ARGB32, 1000, 1000)

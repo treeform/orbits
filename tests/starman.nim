@@ -1,6 +1,6 @@
 import strformat, times
 import orbits/simple, orbits/spk, orbits/horizon
-import cairo, orbits/vmath64
+import cairo, vmath
 
 let now = epochTime()
 

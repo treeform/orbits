@@ -1,6 +1,6 @@
 import strformat
 import orbits/simple, orbits/spk, orbits/horizon
-import cairo, orbits/vmath64
+import cairo, vmath
 
 var
   surface = imageSurfaceCreate(FORMAT_ARGB32, 1000, 1000)
@@ -24,8 +24,8 @@ var hz = newHorizonClient()
 
 type Body = object
   id: int
-  pos: Vec3
-  vel: Vec3
+  pos: DVec3
+  vel: DVec3
   mass: float
 var bodies: seq[Body]
 

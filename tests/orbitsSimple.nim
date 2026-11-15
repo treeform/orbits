@@ -1,4 +1,4 @@
-import orbits/simple, orbits/vmath64, cairo
+import orbits/simple, vmath, cairo
 
 var
   surface = imageSurfaceCreate(FORMAT_ARGB32, 1000, 1000)
