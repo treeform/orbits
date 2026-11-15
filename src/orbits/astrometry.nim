@@ -132,7 +132,7 @@ proc drawStars3d() =
     if star.otherName == "Polaris":
       lookAtPos = star.pos
 
-  var proj = perspective(40, 1, 0.01, 20)
+  var proj = perspective(40'f, 1'f, 0.01'f, 20'f)
   var mat = lookAt(-lookAtPos, vec3(0,0,0), vec3(0,0,1))
   #var mat = rotateX(0.toRad)
   for star in brightStars:
@@ -252,7 +252,7 @@ proc analyzeImage() =
           let
             thisX = spot.x * 2 + a
             thisY = spot.y * 2 + b
-            thisLuma = luma(mipmaps[^(mipLevel + 2)].getRgbaSafe(thisX, thisY))
+            thisLuma = luma(mipmaps[^(mipLevel + 2)].getRgba(thisX, thisY))
           if bestLuma < thisLuma:
             bestLuma = thisLuma
             bestX = thisX
@@ -391,7 +391,7 @@ proc analyzeImage() =
       # match the distance between frist and second star
       let zoom = dist(brightestN[thisTri.aID].pos, brightestN[thisTri.bID].pos)
       let zoom2 = dist(mat * brightStars[tri.aID].pos, mat * brightStars[tri.bID].pos)
-      mat = scaleMat((zoom/zoom2)) * mat
+      mat = scale(vec3(zoom / zoom2)) * mat
 
       # translate the stars into screen center
       mat = translate(vec3(float(surface.getWidth)/2.0,  float(surface.getHeight)/2.0, 0.0)) * mat

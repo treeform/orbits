@@ -1,6 +1,6 @@
 import strformat, times
 import orbits/simple, orbits/spk, orbits/horizon
-import pixie/demo, vmath
+import ./window
 
 let now = epochTime()
 
@@ -25,11 +25,11 @@ hz.debug = false
 
 var font = readFont("demo/Anton-Regular.ttf")
 font.size = 20
-font.paint.color = color(1, 1, 1, 1).rgbx
+font.paint.color = color(1, 1, 1, 1)
 
 var font2 = readFont("demo/Anton-Regular.ttf")
 font2.size = 10
-font2.paint.color = color(1, 1, 1, 1).rgbx
+font2.paint.color = color(1, 1, 1, 1)
 
 start("Orbits demo.")
 while true:
@@ -43,17 +43,17 @@ while true:
   case slide
   of 0:
     let text = "Totally fake Solar System."
-    screen.fillText(font.typeset(text), vec2(10, 10))
+    screen.fillText(font.typeset(text), translate(vec2(10, 10)))
 
     var mat = translate(vec2(400, 300)) * scale(vec2(scaleK, scaleK))
 
-    var path: Path
-    path.circle(vec2(0, 0), 0.1)
+    let path = newPath()
+    path.circle(0, 0, 0.1)
     screen.fillPath(path, color(1,1,1,1), mat)
 
     for planet in simpleElements:
       var step = planet.period / 360
-      var path: Path
+      let path = newPath()
 
       let dist = planet.posAt(0).length
 
@@ -68,25 +68,25 @@ while true:
 
       let th = (-currentTime*10 + planet.period)/ JULIAN_YEAR
       var currentPos = dvec3(sin(th), cos(th), 0) * dist / AU
-      var pathBody: Path
-      pathBody.circle(vec3(currentPos).xy, planetScale)
+      let pathBody = newPath()
+      pathBody.ellipse(vec3(currentPos).xy, planetScale, planetScale)
       screen.fillPath(pathBody, color(1,1,1,1), mat)
 
       screen.strokePath(path, color(1, 1, 1, 0.1), mat, strokeWidth = 1.5)
 
   of 1:
     let text = "Solar System with Ecliptical Model."
-    screen.fillText(font.typeset(text), vec2(10, 10))
+    screen.fillText(font.typeset(text), translate(vec2(10, 10)))
 
     var mat = translate(vec2(400, 300)) * scale(vec2(scaleK, scaleK))
 
-    var path: Path
-    path.circle(vec2(0, 0), 0.1)
+    let path = newPath()
+    path.circle(0, 0, 0.1)
     screen.fillPath(path, color(1,1,1,1), mat)
 
     for planet in simpleElements:
       var step = planet.period / 360
-      var path: Path
+      let path = newPath()
 
       for i in 0..360:
         let time = step * float(i)
@@ -98,8 +98,8 @@ while true:
       path.closePath()
 
       var currentPos = planet.posAt(currentTime) / AU
-      var pathBody: Path
-      pathBody.circle(vec3(currentPos).xy, planetScale)
+      let pathBody = newPath()
+      pathBody.ellipse(vec3(currentPos).xy, planetScale, planetScale)
       screen.fillPath(pathBody, color(1,1,1,1), mat)
 
       screen.strokePath(path, color(1, 1, 1, 0.1), mat, strokeWidth = 0.5)
@@ -109,18 +109,18 @@ while true:
 
   of 3:
     let text = "Solar System with NASA's Chebyshev polynomials."
-    screen.fillText(font.typeset(text), vec2(10, 10))
+    screen.fillText(font.typeset(text), translate(vec2(10, 10)))
 
     var mat = translate(vec2(400, 300)) * scale(vec2(scaleK, scaleK))
 
-    var path: Path
-    path.circle(vec2(0, 0), 0.1)
+    let path = newPath()
+    path.circle(0, 0, 0.1)
     screen.fillPath(path, color(1,1,1,1), mat)
 
     for planet in simpleElements:
       var step = planet.period / 360
       var firstPos: DVec3
-      var path: Path
+      let path = newPath()
 
       for i in 0..360:
         let time = step * float(i)
@@ -134,23 +134,23 @@ while true:
       path.closePath()
 
       var currentPos = spkFile.posAt(currentTime, planet.id, 0) / AU
-      var pathBody: Path
-      pathBody.circle(vec3(currentPos).xy, planetScale)
+      let pathBody = newPath()
+      pathBody.ellipse(vec3(currentPos).xy, planetScale, planetScale)
       screen.fillPath(pathBody, color(1,1,1,1), mat)
 
       screen.strokePath(path, color(1, 1, 1, 0.1), mat, strokeWidth = 0.25)
 
   of 4:
-    screen.draw(horizonsysImage, mat=scale(vec2(0.8)))
+    screen.draw(horizonsysImage, transform=scale(vec2(0.8)))
 
   of 5:
     let text = "Solar System with NASA's Horizon System."
-    screen.fillText(font.typeset(text), vec2(10, 10))
+    screen.fillText(font.typeset(text), translate(vec2(10, 10)))
 
     var mat = translate(vec2(400, 300)) * scale(vec2(scaleK, scaleK))
 
-    var path: Path
-    path.circle(vec2(0, 0), 0.1)
+    let path = newPath()
+    path.circle(0, 0, 0.1)
     screen.fillPath(path, color(1,1,1,1), mat)
 
     proc drawOrbit(id: int, color: Color) =
@@ -164,7 +164,7 @@ while true:
       let period = elements.period
 
       var firstPos: DVec3
-      var path: Path
+      let path = newPath()
 
       let entries = hz.getOrbitalVectorsSeq(
         fromTime = 0.0,
@@ -183,8 +183,8 @@ while true:
       path.closePath()
 
       var currentPos = entries.posAt(currentTime mod period) / AU
-      var pathBody: Path
-      pathBody.circle(vec3(currentPos).xy, planetScale)
+      let pathBody = newPath()
+      pathBody.ellipse(vec3(currentPos).xy, planetScale, planetScale)
       screen.fillPath(pathBody, color(1,1,1,1), mat)
 
       screen.strokePath(path, color, mat, strokeWidth = 0.1)
@@ -204,13 +204,17 @@ while true:
         1000,
         id,
         0)
-      var path: Path
+      let path = newPath()
       for entry in entries:
         let pos = entry.pos / AU
         path.lineTo(pos.x.float32, pos.y.float32)
       screen.strokePath(path, color(1,1,1,1), mat, strokeWidth = 0.1)
       let pos = entries[^1].pos / AU
-      screen.fillText(font2, "  Voyager 1", mat * vec2(pos.x.float32, pos.y.float32))
+      screen.fillText(
+        font2,
+        "  Voyager 1",
+        translate(mat * vec2(pos.x.float32, pos.y.float32))
+      )
 
     block:
       #plot voyager2
@@ -221,13 +225,17 @@ while true:
         1000,
         id,
         0)
-      var path: Path
+      let path = newPath()
       for entry in entries:
         let pos = entry.pos / AU
         path.lineTo(pos.x.float32, pos.y.float32)
       screen.strokePath(path, color(1,1,1,1), mat, strokeWidth = 0.1)
       let pos = entries[^1].pos / AU
-      screen.fillText(font2, "  Voyager 2", mat * vec2(pos.x.float32, pos.y.float32))
+      screen.fillText(
+        font2,
+        "  Voyager 2",
+        translate(mat * vec2(pos.x.float32, pos.y.float32))
+      )
 
     block:
       #plot voyager2
@@ -238,13 +246,17 @@ while true:
         1000,
         id,
         0)
-      var path: Path
+      let path = newPath()
       for entry in entries:
         let pos = entry.pos / AU
         path.lineTo(pos.x.float32, pos.y.float32)
       screen.strokePath(path, color(1,1,1,1), mat, strokeWidth = 0.1)
       let pos = entries[^1].pos / AU
-      screen.fillText(font2, "  New Horizon", mat * vec2(pos.x.float32, pos.y.float32))
+      screen.fillText(
+        font2,
+        "  New Horizon",
+        translate(mat * vec2(pos.x.float32, pos.y.float32))
+      )
 
 
     # for id in [136199]:

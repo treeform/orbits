@@ -1,7 +1,7 @@
 import strformat
 import orbits/simple, orbits/spk, orbits/horizon
-import cairo, orbits/vmath64, random, math
-import print
+import cairo, vmath, random, math
+import print, segments
 
 
 var
@@ -24,8 +24,8 @@ ctx.fill()
 
 type Body = object
   id: int
-  pos: Vec3
-  vel: Vec3
+  pos: DVec3
+  vel: DVec3
   mass: float
 var bodies: seq[Body]
 
@@ -66,7 +66,7 @@ bodies[9].mass = 1.46E+22
 
 
 
-proc minDistance(startTime: float, kick: Vec3, stepTime: float, draw: bool): (float, float) =
+proc minDistance(startTime: float, kick: DVec3, stepTime: float, draw: bool): (float, float) =
 
 
 
@@ -92,7 +92,7 @@ proc minDistance(startTime: float, kick: Vec3, stepTime: float, draw: bool): (fl
   #let stepTime = 100000.0
   var time = startTime
   var minTime = 0.0
-  var minPos = vec3(0,0,0)
+  var minPos = dvec3(0,0,0)
   for step in 0..maxStep:
 
     spaceCraft.pos = spaceCraft.pos + spaceCraft.vel * stepTime
@@ -148,7 +148,7 @@ ctx.setSourceRGBA(1,1,1,1)
 
 var
   bestTime = 1552696987.0
-  bestKick = vec3(0, 0, 0)
+  bestKick = dvec3(0, 0, 0)
   bestMinDist = 1E30
   curTime = bestTime
   curKick = bestKick
@@ -163,7 +163,7 @@ var
 # randomize()
 # var minTime: float
 
-# bestKick = vec3(0, 0, 0)
+# bestKick = dvec3(0, 0, 0)
 # bestMinDist = 1E30
 # for i in 0..dayScan:
 #   curTime = startTime + float(i) * DAY*2
@@ -182,12 +182,12 @@ var
 
 bestMinDist=3670923806.137688
 bestTime=1594878493.0
-bestKick=vec3(3383.63238149, 1497.00765049, 0.03649411)
+bestKick=dvec3(3383.63238149, 1497.00765049, 0.03649411)
 
 
 # var
 #   vecTime: float
-#   vecKick: Vec3
+#   vecKick: DVec3
 # for accuracy in [20000]:
 #   print accuracy
 #   let maxSearch = accuracy
@@ -197,7 +197,7 @@ bestKick=vec3(3383.63238149, 1497.00765049, 0.03649411)
 #     # random search
 #     let
 #       vecTimeD = DAY * rand(-1.0..1.0)
-#       vecKickD = vec3(rand(-1.0..1.0), rand(-1.0..1.0), rand(-0.1..0.1)) * rand(0.0..100.0)
+#       vecKickD = dvec3(rand(-1.0..1.0), rand(-1.0..1.0), rand(-0.1..0.1)) * rand(0.0..100.0)
 
 #     vecTime = vecTime * (1-a) + vecTimeD * a
 #     vecKick = vecKick * (1-a) + vecKickD * a
@@ -319,7 +319,7 @@ bestKick=vec3(3383.63238149, 1497.00765049, 0.03649411)
 #   # random search
 #   let
 #     #vecTime = DAY * rand(-1.0..1.0)
-#     vecKick = vec3(rand(-1.0..1.0), rand(-1.0..1.0), rand(-0.1..0.1)) * rand(0.0..10.0)
+#     vecKick = dvec3(rand(-1.0..1.0), rand(-1.0..1.0), rand(-0.1..0.1)) * rand(0.0..10.0)
 
 #   let a = 1.0 - pow(i/maxSearch, 1)
 
@@ -353,12 +353,12 @@ for accuracy in [10000, 1000, 100, 10, 1]:
 
     for i in 0..100:
       let adjs = @[
-        vec3( 1,  0,  0) * a,
-        vec3( 0,  1,  0) * a,
-        vec3( 0,  0,  1) * a,
-        vec3(-1,  0,  0) * a,
-        vec3( 0, -1,  0) * a,
-        vec3( 0,  0, -1) * a
+        dvec3( 1,  0,  0) * a,
+        dvec3( 0,  1,  0) * a,
+        dvec3( 0,  0,  1) * a,
+        dvec3(-1,  0,  0) * a,
+        dvec3( 0, -1,  0) * a,
+        dvec3( 0,  0, -1) * a
       ]
       var dists = @[0.0,0,0,0,0,0]
 

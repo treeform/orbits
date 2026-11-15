@@ -1,6 +1,6 @@
 import strformat
 import orbits/simple, orbits/spk, orbits/horizon
-import orbits/vmath64
+import vmath
 
 var hz = newHorizonClient()
 
@@ -27,7 +27,10 @@ hz.debug = false
 for planetId in [199, 299, 399, 499, 599, 699, 799, 899, 999]:
   echo planetId
   echo "  radius:", hz.getRadius(Y2000, planetId), " m"
-  echo "  axis:", hz.getRotationAxis(Y2000, planetId), " unit vector ", hz.getRotationAxis(Y2000, planetId).angleBetween(vec3(0,0,1))/PI*180, " deg"
+  let
+    axis = hz.getRotationAxis(Y2000, planetId)
+    inclination = arccos(clamp(axis.normalize().z, -1.0, 1.0))
+  echo "  axis:", axis, " unit vector ", inclination / PI * 180, " deg"
   var speed = hz.getRotationAngularSpeed(Y2000, planetId)
   echo "  angular speed:", speed, " rad/s ", (2*PI/speed)/DAY, " days"
 
